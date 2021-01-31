@@ -6,7 +6,7 @@ const execFile = require('child_process').execFile;
 
 const PORT = process.env.PORT || 3000;
 const FILENAME = 'screenshot.png';
-const SCREENSHOT_URL = 'https://diario.innovacion.gob.sv/?fechaMostrar=18-03-2020';
+const SCREENSHOT_URL = 'https://duckduckgo.com/';
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
@@ -19,7 +19,8 @@ express()
     const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
     const page = await browser.newPage();
     //await page.setViewport({ width: 600, height: 800 });
-    await page.goto(SCREENSHOT_URL || 'https://google.com');
+    //await page.goto(SCREENSHOT_URL || 'https://google.com');
+    await page.goto(SCREENSHOT_URL);
 
     await page.screenshot({
       path: FILENAME,
