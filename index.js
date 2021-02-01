@@ -6,11 +6,11 @@ const fs = require('fs');
 
 const PORT = process.env.PORT || 3000;
 const FILENAME = 'screenshot.png';
-const SCREENSHOT_URL = 'https://duckduckgo.com';
+const DEFAULT_SCREENSHOT_URL = 'https://duckduckgo.com';
 
 /**
  * TODO: 
- * receive a param URL
+ * receive a viewport/convert param 
  * improve readme.
  */
 
@@ -40,7 +40,10 @@ express()
     });
     const page = await browser.newPage();
     //await page.setViewport({ width: 600, height: 800 });
-    await page.goto(SCREENSHOT_URL);
+
+    let web = req.query.web;
+    console.log(web);
+    await page.goto(web || DEFAULT_SCREENSHOT_URL);
 
     await page.screenshot({
       path: FILENAME,
@@ -48,9 +51,12 @@ express()
 
     await browser.close();
 
-    await convert(FILENAME);
-
-    res.status(200).send('ok').end();
+    try {
+      const result = await convert(FILENAME);
+      res.status(200).send('ok').end();
+    } catch (e){
+      res.status(500).send('error').end();
+    }
   })
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
